@@ -53,14 +53,14 @@ export default function Home() {
                   postsRef.current.map((post) => {
                     return(
                       <Link key={post.id} href={`/glosowka/${post.objectID}`}>
-                        <a>
+                        <ATag>
                           <Post key={post.objectID}>
                             <h1>{post.author}</h1>
                             <h3>{post.content}</h3>
                             <h6>{"Dodane: " + post.addedAt.substring(0, 10)}</h6>
                             <audio controls src={post.fileUrl}></audio>
                           </Post>
-                        </a>
+                        </ATag>
                       </Link>
                     )
                   })
