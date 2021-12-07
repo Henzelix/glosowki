@@ -52,7 +52,7 @@ export default function Home() {
                 searchQuery.trim()!='' ?
                   postsRef.current.map((post) => {
                     return(
-                      <Link href={`/glosowka/${post.id}`}>
+                      <Link key={post.id} href={`/glosowka/${post.id}`}>
                         <a>
                           <Post key={post.id}>
                             <h1>{post.author}</h1>
@@ -67,7 +67,7 @@ export default function Home() {
                 :
                   data.map((post) => {
                     return(
-                      <Link href={`/glosowka/${post.id}`}>
+                      <Link key={post.id} href={`/glosowka/${post.id}`}>
                         <ATag>
                           <Post key={post.id}>
                             <h1>{post.author}</h1>
