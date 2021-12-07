@@ -41,7 +41,7 @@ export default function Home() {
         <main>
           <FirstSection>
             <div style={{ textAlign: "center" }}>
-              <Header>Głosówki</Header>
+              <a href="/"><Header>Głosówki</Header></a>
               <a href="/addAudio"><Button>Dodaj nową</Button></a><br /><br /><br />
               <SearchInput onChange={(event) => {searchingQuestion(event.target.value)}} type="text" placeholder="Wyszukaj po autorze lub treści" name="search" id="searchInput"/>
             </div>

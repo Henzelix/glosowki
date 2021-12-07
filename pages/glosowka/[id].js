@@ -73,7 +73,6 @@ export default function AudioPage({ id }) {
               <Post>
                 <h1>{data.author}</h1>
                 <h3>{data.content}</h3>
-                <h6>{"Dodane: " + new Date(+data.addedAt.seconds*1000).toLocaleString('pl-PL')}</h6>
                 <audio controls src={data.fileUrl}></audio>
               </Post>
             </PostsContainer>
