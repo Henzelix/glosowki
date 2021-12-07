@@ -52,9 +52,9 @@ export default function Home() {
                 searchQuery.trim()!='' ?
                   postsRef.current.map((post) => {
                     return(
-                      <Link key={post.id} href={`/glosowka/${post.id}`}>
+                      <Link key={post.id} href={`/glosowka/${post.objectID}`}>
                         <a>
-                          <Post key={post.id}>
+                          <Post key={post.objectID}>
                             <h1>{post.author}</h1>
                             <h3>{post.content}</h3>
                             <h6>{"Dodane: " + post.addedAt.substring(0, 10)}</h6>
