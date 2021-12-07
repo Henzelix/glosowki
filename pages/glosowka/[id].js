@@ -1,17 +1,40 @@
-import { firestore } from "../lib/firebase";
+import { firestore } from "../../lib/firebase";
 import algoliasearch from "algoliasearch";
 import useSWR from "swr";
 import styled from "styled-components";
 import { useState, useRef } from "react";
-import Metatags from "../components/Metatags";
-import Link from "next/link";
+import Metatags from "../../components/Metatags";
 
-export default function Home() {
+export async function getStaticProps({ params }){
+    try{
+        const { id } = params;
+
+        return{
+            props:{
+                id,
+            },
+            revalidate: 10,
+        }
+    }catch(error){
+        return{
+            notFound: true
+        }
+    }
+}
+
+export async function getStaticPaths(){
+  return{
+    paths: [],
+    fallback: 'blocking',
+  }
+}
+
+export default function AudioPage({ id }) {
 
   const fetchPosts = async (colName) => {
-    const posts = await firestore.collection(colName).get();
-    console.log(posts.docs.map(doc => {return {...doc.data(), id: doc.id} }));
-    return posts.docs.map(doc => {return {...doc.data(), id: doc.id} });
+    const post = await firestore.collection(colName).doc(id).get();
+    console.log(post.data());
+    return post.data();
   }
 
   const { data, error } = useSWR('glosowki', fetchPosts);
@@ -41,45 +64,18 @@ export default function Home() {
         <main>
           <FirstSection>
             <div style={{ textAlign: "center" }}>
-              <Header>Głosówki</Header>
+              <a href="/"><Header>Głosówki</Header></a>
               <a href="/addAudio"><Button>Dodaj nową</Button></a><br /><br /><br />
-              <SearchInput onChange={(event) => {searchingQuestion(event.target.value)}} type="text" placeholder="Wyszukaj po autorze lub treści" name="search" id="searchInput"/>
             </div>
           </FirstSection>
           <SecondSection>
             <PostsContainer>
-              {
-                searchQuery.trim()!='' ?
-                  postsRef.current.map((post) => {
-                    return(
-                      <Link href={`/glosowka/${post.id}`}>
-                        <a>
-                          <Post key={post.id}>
-                            <h1>{post.author}</h1>
-                            <h3>{post.content}</h3>
-                            <h6>{"Dodane: " + post.addedAt.substring(0, 10)}</h6>
-                            <audio controls src={post.fileUrl}></audio>
-                          </Post>
-                        </a>
-                      </Link>
-                    )
-                  })
-                :
-                  data.map((post) => {
-                    return(
-                      <Link href={`/glosowka/${post.id}`}>
-                        <ATag>
-                          <Post key={post.id}>
-                            <h1>{post.author}</h1>
-                            <h3>{post.content}</h3>
-                            <h6>{"Dodane: " + new Date(+post.addedAt.seconds*1000).toLocaleString('pl-PL')}</h6>
-                            <audio controls src={post.fileUrl}></audio>
-                          </Post>
-                        </ATag>
-                      </Link>
-                    )
-                  })
-              }
+              <Post>
+                <h1>{data.author}</h1>
+                <h3>{data.content}</h3>
+                <h6>{"Dodane: " + new Date(+data.addedAt.seconds*1000).toLocaleString('pl-PL')}</h6>
+                <audio controls src={data.fileUrl}></audio>
+              </Post>
             </PostsContainer>
           </SecondSection>
         </main>
@@ -135,18 +131,11 @@ const PostsContainer = styled.div`
   margin-right: auto;
 `;
 
-const ATag = styled.a`
-  display: flex;
-  width: 30%;
-  min-width: 350px;
-`;
-
 const Post = styled.div`
-  width: 100%;
+  width: 30%;
   min-width: 350px;
   border: 5px #f5dd00 solid;
   border-radius: 15px;
   text-align: center;
   margin-top: 25px;
-  cursor: pointer;
 `;
